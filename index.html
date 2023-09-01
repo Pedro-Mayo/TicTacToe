@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Not So Recursive Tic Tac Toe</title>
+
+
+    <!-- IBM Plex Mono Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono&display=swap" rel="stylesheet">
+
+    <style>
+        #main,#root{display:flex}#board,#gameScore{grid-template-columns:1fr 1fr 1fr}*,::after,::before{box-sizing:border-box}*{margin:0;padding:0;font:inherit}:root{font-family:'IBM Plex Mono',monospace}body{min-height:100vh}#root{flex-direction:column}#root>*{padding-inline:2.5rem}#root>:first-child{padding-top:.5rem}#root>:last-child{padding-bottom:2rem}#main{flex-direction:row;flex-wrap:wrap;align-content:center;justify-content:center}#gameOptions,#gameTracking{padding:1rem}#gameScore{display:inline-grid;gap:5px;background-color:#000;border:5px solid #000}#gameScore>*{font-size:2rem;font-weight:500;background-color:#fff;padding:5px}#board{width:max(300px ,min(70vh,65vw));height:max(300px ,min(70vh,65vw));background-color:#000;border:solid #000;border-radius:max(1rem,min(4vh,4vw));display:grid;grid-template-rows:1fr 1fr 1fr;gap:max(5px ,min(1rem,min(1.5vh,1.5vw)))}#board>*{background-color:#fff;font-size:min(14vh, 13vw);text-align:center;cursor:pointer}#board>:first-child{border-top-left-radius:max(1rem,min(4vh,4vw))}#board>:nth-child(3){border-top-right-radius:max(1rem,min(4vh,4vw))}#board>:nth-child(7){border-bottom-left-radius:max(1rem,min(4vh,4vw))}#board>:last-child{border-bottom-right-radius:max(1rem,min(4vh,4vw))}#board>:hover{background-color:grey}
+    </style>
+
+</head>
+
+
+<body id="root">
+    <header></header>
+    <main id="main">
+        <div id="gameTracking">
+            <div id="gameScore">
+                <div>X</div>
+                <div>Y</div>
+                <div>Draw</div>
+                <div id="xScore">0</div>
+                <div id="yScore">0</div>
+                <div id="dScore">0</div>
+            </div>
+        </div>
+        <div id="board">
+            <div onclick="play(this,0,0)"></div>
+            <div onclick="play(this,1,0)"></div>
+            <div onclick="play(this,2,0)"></div>
+            <div onclick="play(this,0,1)"></div>
+            <div onclick="play(this,1,1)"></div>
+            <div onclick="play(this,2,1)"></div>
+            <div onclick="play(this,0,2)"></div>
+            <div onclick="play(this,1,2)"></div>
+            <div onclick="play(this,2,2)"></div>
+        </div>
+        <div id="gameOptions">
+            <button onclick="restart()">New Game</button>
+            <button onclick='gameScore("reset")'>Reset Score</button>
+        </div>
+
+    </main>
+    <footer></footer>
+    <script>const GAME_SCORE=JSON.parse(localStorage.getItem("historicScore"))??[],BOARD_COLS=3,BOARD_ROWS=3,PLAYERS=["O","X"],cells=document.getElementById("board").children,boardArray=[];let gameEnded=!1,turnNumber=1;function updateTable(){let e=GAME_SCORE.reduce((e,r)=>r===PLAYERS[1]?++e:e,0),r=GAME_SCORE.reduce((e,r)=>r===PLAYERS[0]?++e:e,0),t=GAME_SCORE.length-(e+r);document.getElementById("xScore").innerHTML=e,document.getElementById("yScore").innerHTML=r,document.getElementById("dScore").innerHTML=t}function gameScore(e){if("reset"===e){GAME_SCORE.forEach(e=>{e=void 0}),GAME_SCORE.length=0,updateTable(),localStorage.setItem("historicScore",JSON.stringify(GAME_SCORE));return}if(e===PLAYERS[0]||e===PLAYERS[1]){GAME_SCORE.push(e),localStorage.setItem("historicScore",JSON.stringify(GAME_SCORE)),updateTable();return}GAME_SCORE.push("Draw"),localStorage.setItem("historicScore",JSON.stringify(GAME_SCORE)),updateTable()}for(let col=0;col<3;col++)boardArray.push([,,,].fill(!1));function play(e,r,t){if(!boardArray[t][r]&&!gameEnded){let n=PLAYERS[turnNumber%2];boardArray[t][r]=n,e.innerHTML=n,turnNumber>=4&&check(),!gameEnded&&turnNumber++}}function check(){let e=boardArray;for(let r=0;r<3;r++){let t=e[r];if(t[0]===t[1]&&t[1]===t[2]&&t[0]){gameEnded=!0,gameScore(t[0]);return}}for(let n=0;n<3;n++)if(e[0][n]===e[1][n]&&e[1][n]===e[2][n]&&e[0][n]){gameEnded=!0,gameScore(e[0][n]);return}if(e[0][0]&&e[0][0]===e[1][1]&&e[0][0]===e[2][2]){gameEnded=!0,gameScore(e[0][0]);return}if(e[0][2]&&e[0][2]===e[1][1]&&e[1][1]===e[2][0]){gameEnded=!0,gameScore(e[0][2]);return}9===turnNumber&&(gameEnded=!0,gameScore("Draw"))}function restart(){turnNumber=1,gameEnded=!1,boardArray.forEach(e=>e.fill(!1));for(let e=0;e<cells.length;e++)cells[e].innerHTML=""}updateTable();</script>
+</body>
+
+</html>
